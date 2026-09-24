@@ -13,10 +13,10 @@ class ProjectFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name(),
-            'description' => $this->faker->text(),
-            'start_date' => $this->faker->dateTimeBetween('now'),
-            'end_date' => $this->faker->dateTimeBetween('now', '+3 months'),
+            'name' => $this->faker->words(5, true),
+            'description' => $this->faker->paragraph(),
+            'start_date' => $this->faker->dateTimeBetween('now', '+1 month')->format('Y-m-d'),
+            'end_date' => $this->faker->dateTimeBetween('+1 month', '+6 months')->format('Y-m-d'),
             'status' => $this->faker->randomElement(ProjectStatus::values()),
         ];
     }

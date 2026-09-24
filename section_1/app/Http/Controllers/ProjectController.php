@@ -36,7 +36,7 @@ class ProjectController extends Controller
                 ProjectStatus::from($request->status)
             ));
 
-            return response()->json(['data' => new ProjectResource($project)]);
+            return response()->json(['data' => new ProjectResource($project)],201);
         } catch (Throwable $exception) {
             Log::error($exception->getMessage());
             return response()->json(['error' => $exception->getMessage()], 500);
@@ -69,7 +69,7 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         $this->projectService->delete($project);
-        
+
         return response()->json(null, 204);
     }
 }

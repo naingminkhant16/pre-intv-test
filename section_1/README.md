@@ -1,58 +1,178 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Section 1 Backend - REST API With Laravel
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This project exposes a RESTful endpoints at `/api/projects` and supports listing, creating, viewing, updating, and deleting project resource.
 
-## About Laravel
+## Requirements
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- PHP 8.3+
+- Composer
+- Node.js and npm
+- A database such as MySQL, PostgreSQL, or SQLite
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Run the project locally
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+1. Install PHP dependencies:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer install
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+2. Create the environment file:
 
-## Contributing
+```bash
+cp .env.example .env
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+3. Configure the database in `.env`.
 
-## Code of Conduct
+I used SQLite for local development, it can be done with MySQL or PostgreSQL as well.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+touch database/database.sqlite
+```
 
-## Security Vulnerabilities
+Then set the following in `.env`:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```env
+DB_CONNECTION=sqlite
+```
 
-## License
+4. Generate the application key:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+php artisan key:generate
+```
+
+5. Run the database migrations and seed sample data:
+
+```bash
+php artisan migrate --seed
+```
+
+6. Start the API server:
+
+```bash
+php artisan serve
+```
+
+The APIs will be available at:
+
+```text
+http://localhost:8000
+```
+
+## Project endpoints
+
+Base URL:
+
+```text
+/api
+```
+
+### 1) Get all projects
+
+```http
+GET /api/projects
+```
+
+Returns a paginated list of projects.
+
+### 2) Create a project
+
+```http
+POST /api/projects
+```
+
+Request body example:
+
+```json
+{
+    "name": "Website redesign",
+    "description": "Redesign the marketing site and improve conversion flow.",
+    "start_date": "2026-09-24",
+    "end_date": "2026-10-30",
+    "status": "in_progress"
+}
+```
+
+Valid `status` values:
+
+- `planned`
+- `in_progress`
+- `completed`
+
+### 3) Get one project
+
+```http
+GET /api/projects/{project}
+```
+
+Returns a single project record by ID.
+
+### 4) Update a project
+
+```http
+PUT /api/projects/{project}
+```
+
+or
+
+```http
+PATCH /api/projects/{project}
+```
+
+Example payload:
+
+```json
+{
+    "name": "Website redesign v2",
+    "description": "Redesign the marketing site and improve conversion flow with new content blocks.",
+    "start_date": "2026-09-24",
+    "end_date": "2026-11-15",
+    "status": "completed"
+}
+```
+
+### 5) Delete a project
+
+```http
+DELETE /api/projects/{project}
+```
+
+This performs a soft delete and responds with HTTP 204 No Content.
+
+## Project response structure
+
+A project object looks like this:
+
+```json
+{
+    "id": "8d77d1d8-7b5e-4e77-8f1d-8b6f13865a4d",
+    "name": "Website redesign",
+    "description": "Redesign the marketing site and improve conversion flow.",
+    "start_date": "2026-09-24",
+    "end_date": "2026-10-30",
+    "status": "in_progress",
+    "created_at": "2026-09-24 11:00:00",
+    "updated_at": "2026-09-24 11:00:00"
+}
+```
+
+## Validation rules
+
+Project requests are validated by the `ProjectRequest` rules:
+
+- `name`: required, string, between 5 and 100 characters, unique
+- `description`: required, string, between 5 and 255 characters
+- `start_date`: required, valid date in `Y-m-d` format
+- `end_date`: required, valid date in `Y-m-d` format, must be on or after `start_date`
+- `status`: required and must be one of the enum values above
+
+## Useful commands
+
+```bash
+php artisan serve
+php artisan migrate
+php artisan migrate --seed
+php artisan test
+```
