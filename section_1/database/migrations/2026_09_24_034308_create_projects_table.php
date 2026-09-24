@@ -12,13 +12,14 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('projects', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('name');
             $table->text('description');
             $table->date('start_date');
             $table->date('end_date');
             $table->enum('status', ProjectStatus::values())->default(ProjectStatus::PLANNED);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
