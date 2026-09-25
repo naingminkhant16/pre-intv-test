@@ -9,27 +9,10 @@ const defaultTasks = [
     { id: 3, title: 'Watch a movie', completed: false },
 ]
 const defaultFilter = 'all'
-const STORAGE_KEY = 'task-manager-items'
 
 export default function TaskList() {
     const [tasks, setTasks] = useState(defaultTasks)
     const [filter, setFilter] = useState(defaultFilter)
-
-    // set initial tasks
-    useEffect(() => {
-        const savedTasks = localStorage.getItem(STORAGE_KEY)
-
-        if (!savedTasks) return
-
-        const parsedTasks = JSON.parse(savedTasks)
-        if (Array.isArray(parsedTasks) && parsedTasks.length > 0) {
-            setTasks(parsedTasks)
-        }
-    }, [])
-
-    useEffect(() => {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
-    }, [tasks])
 
     // filter tasks
     const filteredTasks = tasks.filter((task) => {

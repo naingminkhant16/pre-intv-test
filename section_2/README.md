@@ -1,16 +1,68 @@
-# React + Vite
+# Section 2 - React Task Manager
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React task manager built with Vite.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Add a new task with validation
+- Mark tasks as complete or incomplete
+- Delete tasks
+- Filter tasks by status
+- Clean UI styled with Bootstrap
 
-## React Compiler
+## How to run
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Install dependencies:
 
-## Expanding the ESLint configuration
+   ```bash
+   npm install
+   ```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+2. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+3. Open the local URL shown in the terminal, usually:
+   ```bash
+   http://localhost:5173
+   ```
+
+## How it is implemented
+
+This app uses React with Vite and a simple component-based structure.
+
+### Main components
+
+- `src/App.jsx` - Root component that renders the task manager in a centered layout.
+- `src/components/TaskList.jsx` - Holds the main task state, filter state, and all task logic.
+- `src/components/TaskInput.jsx` - Handles new task input and validation.
+- `src/components/TaskItem.jsx` - Displays an individual task with a checkbox and delete button.
+
+### State and behavior
+
+- `TaskList` stores the tasks in React state.
+- `handleAddTask` adds a new task to the top of the list.
+- `toggleTask` switches the `completed` status.
+- `deleteTask` removes a task from the list.
+- The filter state controls whether tasks show as `all`, `active`, or `completed`.
+
+### Styling
+
+- Bootstrap is used for layout and controls.
+- The app also includes custom styling in `src/App.css` and `src/index.css` for the overall look.
+
+## Project structure
+
+```bash
+src/
+  App.jsx
+  App.css
+  index.css
+  main.jsx
+  components/
+    TaskInput.jsx
+    TaskItem.jsx
+    TaskList.jsx
+```
