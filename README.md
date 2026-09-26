@@ -506,3 +506,7 @@ This prepends `Case Study:` to the archive page title when viewing the custom po
 1. Add new case studies from the WordPress admin.
 2. Insert the shortcode `[featured_case_studies]` into any page or post.
 3. Visit the archive page for the case studies to see the modified archive title.
+
+## Explaination for fourth question
+
+Plugin layouts should be overridden from the active theme rather than modifying the plugin directly, so plugin updates do not overwrite customizations. I would use the WordPress template hierarchy to create the most specific template supported by the plugin/theme, such as a custom template in the theme that takes precedence over the plugin's default layout.
