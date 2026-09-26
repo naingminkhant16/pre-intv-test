@@ -1,4 +1,4 @@
-# Section 1 - Backend - REST API With Laravel
+# Section 1 Backend - REST API With Laravel
 
 This project exposes a RESTful endpoints at `/api/projects` and supports listing, creating, viewing, updating, and deleting project resource.
 
@@ -87,11 +87,11 @@ Request body example:
 
 ```json
 {
-    "name": "Website redesign",
-    "description": "Redesign the marketing site and improve conversion flow.",
-    "start_date": "2026-09-24",
-    "end_date": "2026-10-30",
-    "status": "in_progress"
+  "name": "Website redesign",
+  "description": "Redesign the marketing site and improve conversion flow.",
+  "start_date": "2026-09-24",
+  "end_date": "2026-10-30",
+  "status": "in_progress"
 }
 ```
 
@@ -125,11 +125,11 @@ Example payload:
 
 ```json
 {
-    "name": "Website redesign v2",
-    "description": "Redesign the marketing site and improve conversion flow with new content blocks.",
-    "start_date": "2026-09-24",
-    "end_date": "2026-11-15",
-    "status": "completed"
+  "name": "Website redesign v2",
+  "description": "Redesign the marketing site and improve conversion flow with new content blocks.",
+  "start_date": "2026-09-24",
+  "end_date": "2026-11-15",
+  "status": "completed"
 }
 ```
 
@@ -147,14 +147,14 @@ A project object looks like this:
 
 ```json
 {
-    "id": "8d77d1d8-7b5e-4e77-8f1d-8b6f13865a4d",
-    "name": "Website redesign",
-    "description": "Redesign the marketing site and improve conversion flow.",
-    "start_date": "2026-09-24",
-    "end_date": "2026-10-30",
-    "status": "in_progress",
-    "created_at": "2026-09-24 11:00:00",
-    "updated_at": "2026-09-24 11:00:00"
+  "id": "8d77d1d8-7b5e-4e77-8f1d-8b6f13865a4d",
+  "name": "Website redesign",
+  "description": "Redesign the marketing site and improve conversion flow.",
+  "start_date": "2026-09-24",
+  "end_date": "2026-10-30",
+  "status": "in_progress",
+  "created_at": "2026-09-24 11:00:00",
+  "updated_at": "2026-09-24 11:00:00"
 }
 ```
 
@@ -294,23 +294,23 @@ This is the example JSON response structure.
 
 ```json
 {
-    "success": true,
-    "status": 200,
-    "meta_key": {
-        "method": "get",
-        "endpoint": "api/projects/01a0d319-0cee-7365-8f6b-b73c2b517342",
-        "duration": 0.89
-    },
-    "data": {
-        "id": "01a0d319-0cee-7365-8f6b-b73c2b517342",
-        "name": "aut sed mollitia aut ut",
-        "description": "Voluptatem autem quibusdam recusandae . Non ...",
-        "start_date": "2026-10-09",
-        "end_date": "2027-02-04",
-        "status": "planned",
-        "created_at": "2026-09-24 11:07:09",
-        "updated_at": "2026-09-24 11:07:09"
-    }
+  "success": true,
+  "status": 200,
+  "meta_key": {
+    "method": "get",
+    "endpoint": "api/projects/01a0d319-0cee-7365-8f6b-b73c2b517342",
+    "duration": 0.89
+  },
+  "data": {
+    "id": "01a0d319-0cee-7365-8f6b-b73c2b517342",
+    "name": "aut sed mollitia aut ut",
+    "description": "Voluptatem autem quibusdam recusandae . Non ...",
+    "start_date": "2026-10-09",
+    "end_date": "2027-02-04",
+    "status": "planned",
+    "created_at": "2026-09-24 11:07:09",
+    "updated_at": "2026-09-24 11:07:09"
+  }
 }
 ```
 
@@ -338,3 +338,171 @@ php artisan migrate
 php artisan migrate --seed
 php artisan test
 ```
+
+# Section 2 - React Task Manager
+
+A React task manager built with Vite.
+
+## Features
+
+- Add a new task with validation
+- Mark tasks as complete or incomplete
+- Delete tasks
+- Filter tasks by status
+- Clean UI styled with Bootstrap
+
+## How to run
+
+1. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+2. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+3. Open the local URL shown in the terminal, usually:
+   ```bash
+   http://localhost:5173
+   ```
+
+## How it is implemented
+
+This app uses React with Vite and a simple component-based structure.
+
+### Main components
+
+- `src/App.jsx` - Root component that renders the task manager in a centered layout.
+- `src/components/TaskList.jsx` - Holds the main task state, filter state, and all task logic.
+- `src/components/TaskInput.jsx` - Handles new task input and validation.
+- `src/components/TaskItem.jsx` - Displays an individual task with a checkbox and delete button.
+
+### State and behavior
+
+- `TaskList` stores the tasks in React state.
+- `handleAddTask` adds a new task to the top of the list.
+- `toggleTask` switches the `completed` status.
+- `deleteTask` removes a task from the list.
+- The filter state controls whether tasks show as `all`, `active`, or `completed`.
+
+### Styling
+
+- Bootstrap is used for layout and controls.
+- The app also includes custom styling in `src/App.css` and `src/index.css` for the overall look.
+
+## Project structure
+
+```bash
+src/
+  App.jsx
+  App.css
+  index.css
+  main.jsx
+  components/
+    TaskInput.jsx
+    TaskItem.jsx
+    TaskList.jsx
+```
+
+# Section 3 - API Integrations
+
+A simple React app built with Vite and Bootstrap to display the first 10 posts from JSONPlaceholder.
+
+## Features
+
+- Fetches posts from https://jsonplaceholder.typicode.com/posts
+- Shows the first 10 post titles
+- Displays a loading spinner while the request is in progress
+- Shows an error message if the request fails or returns a non-OK status
+- Highlights titles longer than 30 characters
+- Filters the visible titles as the user types in the search box
+- Clicking a title displays that post's body
+
+## How it works
+
+- `App.jsx` manages the main state:
+  - `posts` stores the fetched posts
+  - `selectedPostId` tracks the currently selected post
+  - `searchTerm` stores the filter text
+  - `loading` and `error` handle fetch UI states
+- `useEffect` runs once on mount and fetches the posts from the API.
+- `useMemo` filters the posts based on the current search term without making an extra request.
+- `PostList.jsx` renders the filtered titles and highlights long ones.
+- `PostDetail.jsx` shows the selected post body.
+- Bootstrap is used for layout and styling.
+
+## Run the project
+
+1. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+2. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+3. Open the local URL shown in the terminal, usually:
+   ```bash
+   http://localhost:5173/
+   ```
+
+# Section 4 - WordPress PHP code to register custom post type - Case Studies
+
+This code is used to register a custom post type for case studies and adds a shortcode to display featured entries on the frontend.
+
+## Features
+
+### 1. Custom Post Type
+
+The code includes to register a custom post type named `case_study` with the following settings:
+
+- Label: Case Studies
+- Publicly accessible: yes
+- Available in the REST API: yes
+- Supports: title, editor, and thumbnail
+- Archive enabled: yes
+- Archive slug: `case-studies`
+
+This is created with `register_post_type('case_study', ...)` and hooked into `init`.
+
+### 2. Shortcode
+
+The plugin adds the shortcode:
+
+```php
+[featured_case_studies]
+```
+
+This shortcode runs a `WP_Query` for the `case_study` post type and displays up to 3 published case studies, ordered by date descending. Each result shows the title and excerpt inside a `featured-case-studies` container.
+
+If no case studies are found, it returns:
+
+```html
+<p>No case studies found.</p>
+```
+
+### 3. Archive Title Filter
+
+A filter is added to `the_title` to modify the archive title for case study pages:
+
+```php
+if (is_post_type_archive('case_study')) {
+    $title = 'Case Study: ' . $title;
+}
+```
+
+This prepends `Case Study:` to the archive page title when viewing the custom post type archive.
+
+## Usage
+
+1. Add new case studies from the WordPress admin.
+2. Insert the shortcode `[featured_case_studies]` into any page or post.
+3. Visit the archive page for the case studies to see the modified archive title.
