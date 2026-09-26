@@ -168,6 +168,168 @@ Project requests are validated by the `ProjectRequest` rules:
 - `end_date`: required, valid date in `Y-m-d` format, must be on or after `start_date`
 - `status`: required and must be one of the enum values above
 
+## Project coding style and architecture
+
+This project follows a clear Laravel layered architecture so each component has a specific responsibility.
+
+### 1) Routes
+
+All API routes are centralized in `routes/api.php`.
+
+```php
+Route::apiResource('projects', ProjectController::class);
+```
+
+This keeps route registration simple and consistent. The controller is responsible for handling HTTP concerns, while the business logic lives in the service layer.
+
+### 2) Controller
+
+`ProjectController` is the HTTP entry point. It:
+
+- receives the request
+- validates it through `ProjectRequest`
+- converts the request data into a `ProjectDto`
+- calls the appropriate service method
+- returns a JSON response or API resource payload
+
+The controller is intentionally thin and does not contain complex business rules. It focuses on request flow and API response shaping.
+
+### 3) Request validation
+
+`ProjectRequest` extends Laravel's `FormRequest` and is responsible for:
+
+- `authorize()` to allow access
+- `rules()` to define validation rules
+- method-aware validation for `create` vs `update`
+
+This keeps validation logic separate from controller logic and ensures all incoming payloads are checked before reaching the service layer.
+
+Example pattern:
+
+```php
+return match ($this->method()) {
+    'PUT', 'PATCH' => $this->updateRules(),
+    default => $this->createRules(),
+};
+```
+
+### 4) DTO (Data Transfer Object)
+
+`ProjectDto` is used to pass validated data into the service layer in a structured way.
+
+Benefits:
+
+- prevents raw request arrays from being passed around directly
+- keeps the service contract typed and explicit
+- allows centralized access to values like `name`, `description`, `start_date`, `end_date`, and `status`
+
+This keeps the service layer clean and predictable.
+
+### 5) Service layer
+
+`ProjectService` contains the real business logic for project operations:
+
+- `getAll()` for listing projects
+- `create()` for creating a project
+- `update()` for updating a project
+- `delete()` for soft delete or hard delete
+
+The service uses the model directly and is responsible for persistence logic. It does not handle HTTP or validation concerns.
+
+Typical pattern:
+
+```php
+$project = $this->model->create([
+    'name' => $dto->getName(),
+    'description' => $dto->getDescription(),
+    'start_date' => $dto->getStartDate(),
+    'end_date' => $dto->getEndDate(),
+    'status' => $dto->getStatus(),
+]);
+```
+
+### 6) Error handling
+
+Error handling is done in two layers:
+
+- validation errors are handled automatically by Laravel FormRequest and returned as structured validation responses
+- controller-level exceptions are caught with `try/catch` and logged using `Log::error()` before returning a JSON error response
+
+Example:
+
+```php
+try {
+    // service call
+} catch (Throwable $exception) {
+    Log::error($exception->getMessage());
+    return response()->json(['error' => $exception->getMessage()], 500);
+}
+```
+
+This ensures application errors are visible in logs and the client receives a clear JSON error payload.
+
+### 7) API response formatter middleware
+
+`HandleApiResponse` middleware wraps API responses using `ApiResponseFormatter`.
+
+Its job is to standardize the JSON response structure for all API endpoints. The middleware:
+
+- captures request start time
+- runs the next request handler
+- detects API responses
+- formats the response payload consistently
+- includes metadata such as method, endpoint, and duration
+
+This is useful for keeping the API consistent across endpoints and reducing duplication in controllers.
+
+```php
+if ($this->isApi($request, $response)) {
+    $statusCode = $response->getStatusCode();
+    $data = $response->getData();
+    return $api->make($data, $statusCode);
+}
+```
+
+This is the example JSON response structure.
+
+```json
+{
+    "success": true,
+    "status": 200,
+    "meta_key": {
+        "method": "get",
+        "endpoint": "api/projects/01a0d319-0cee-7365-8f6b-b73c2b517342",
+        "duration": 0.89
+    },
+    "data": {
+        "id": "01a0d319-0cee-7365-8f6b-b73c2b517342",
+        "name": "aut sed mollitia aut ut",
+        "description": "Voluptatem autem quibusdam recusandae . Non ...",
+        "start_date": "2026-10-09",
+        "end_date": "2027-02-04",
+        "status": "planned",
+        "created_at": "2026-09-24 11:07:09",
+        "updated_at": "2026-09-24 11:07:09"
+    }
+}
+```
+
+### 8) Resource layer
+
+The project also uses Laravel API Resources (`ProjectResource`) to shape the data returned to clients. This helps keep responses consistent and prevents exposing raw model data directly.
+
+### Overall Coding Style
+
+This overall style follows a clean separation of concerns:
+
+- Routes: entry point
+- Controller: HTTP orchestration
+- Request: validation
+- DTO: data transfer
+- Service: business logic
+- Middleware/Formatter: response normalization
+- Resource: response shaping
+
 ## Useful commands
 
 ```bash
